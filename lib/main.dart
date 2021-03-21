@@ -1,3 +1,4 @@
+// ignore: unused_import
 import 'dart:html';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class KiresuManagerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Kiresu Manager',
       home: LoginScreen(),
     );
