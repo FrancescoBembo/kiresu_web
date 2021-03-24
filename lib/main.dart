@@ -14,9 +14,8 @@ class KiresuManagerApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Kiresu Manager',
-      //home: LoginScreen(),
       routes: {
-        '/': (context) => SignUpScreen(),
+        '/': (context) => LoginScreen(),
         '/welcome': (context) => WelcomeScreen(),
       },
     );
