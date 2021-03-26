@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
         ),
         title: Text('Kiresu'),
       ),
+      //////////////// Drawer ///////////////
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -25,7 +26,7 @@ class HomeScreen extends StatelessWidget {
             DrawerHeader(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/logo.png'),
+                  image: AssetImage('assets/logo_with_pad.png'),
                 ),
                 color: Colors.indigo.shade800,
               ),
@@ -62,7 +63,107 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      //////////////////////
+      ////////////////////// BODY /////
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: SizedBox(
+                  height: 44,
+                  width: 140,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/addUser');
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('ADD USERS'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.indigo[800],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: SizedBox(
+                  width: 200,
+                  height: 150,
+                  child: Card(
+                    elevation: 5,
+                    child: InkWell(
+                      splashColor: Colors.indigo.shade600.withAlpha(40),
+                      onTap: () {
+                        print('Card tapped.');
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+                            child: Image.asset('assets/ic_buildings.png'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                            child: Text(
+                              'Buildings',
+                              style: TextStyle(
+                                  color: Colors.indigo.shade800,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: SizedBox(
+                  width: 200,
+                  height: 150,
+                  child: Card(
+                    elevation: 5,
+                    child: InkWell(
+                      splashColor: Colors.indigo.shade600.withAlpha(40),
+                      onTap: () {
+                        print('Card tapped.');
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 24, 16, 8),
+                            child: Image.asset('assets/ic_userlist.png'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                            child: Text(
+                              'Users',
+                              style: TextStyle(
+                                  color: Colors.indigo.shade800,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
