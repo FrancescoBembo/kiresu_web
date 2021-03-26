@@ -60,7 +60,7 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   void _showHomeScreen() {
-    Navigator.of(context).pushNamed('/welcome');
+    Navigator.of(context).pushNamed('/home');
   }
 
   @override

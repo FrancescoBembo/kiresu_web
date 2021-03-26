@@ -1,6 +1,7 @@
 // ignore: unused_import
 import 'dart:html';
 import 'package:flutter/material.dart';
+import 'package:kiresu_web/Screens/add_user_screen.dart';
 import 'package:kiresu_web/Screens/login_screen.dart';
 
 import 'Screens/home_screen.dart';
@@ -29,7 +30,8 @@ class KiresuManagerApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) => LoginScreen(),
-        '/welcome': (context) => HomeScreen(),
+        '/home': (context) => HomeScreen(),
+        '/addUser': (context) => AddUserScreen(),
       },
     );
   }
