@@ -1,14 +1,13 @@
 // ignore: unused_import
 import 'dart:html';
-//import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/material.dart';
 import 'package:kiresu_web/Screens/login_screen.dart';
+
+import 'Screens/home_screen.dart';
 
 void main() {
   runApp(KiresuManagerApp());
 }
-
-Color myHexColor = Color(0xffD24848);
 
 class KiresuManagerApp extends StatelessWidget {
   @override
@@ -16,9 +15,21 @@ class KiresuManagerApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Kiresu Manager',
+      theme: ThemeData(
+        primaryColor: Colors.indigo[800],
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            primary: Colors.indigo[800],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            side: BorderSide(width: 2, color: Colors.indigo.shade800),
+          ),
+        ),
+      ),
       routes: {
         '/': (context) => LoginScreen(),
-        '/welcome': (context) => WelcomeScreen(),
+        '/welcome': (context) => HomeScreen(),
       },
     );
   }

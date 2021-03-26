@@ -4,32 +4,27 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(
-      //  title: Text('Kiresu'),
-      //),
-      backgroundColor: Colors.grey[200],
-      body: Center(
-        child: SizedBox(
-          width: 400,
-          child: Card(
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: SignUpForm(),
+      backgroundColor: Colors.indigo[800],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Image.asset('assets/logo1.png'),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class WelcomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Welcome!', style: Theme.of(context).textTheme.headline2),
+          Center(
+            child: SizedBox(
+              width: 400,
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: SignUpForm(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -64,7 +59,7 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-  void _showWelcomeScreen() {
+  void _showHomeScreen() {
     Navigator.of(context).pushNamed('/welcome');
   }
 
@@ -76,15 +71,14 @@ class _SignUpFormState extends State<SignUpForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-              padding: EdgeInsets.fromLTRB(16, 32, 16, 32),
-              child:
-                  Text('Login', style: Theme.of(context).textTheme.headline4)),
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+            padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
             child: TextFormField(
               controller: _usernameTextController,
               decoration: InputDecoration(
-                  labelText: 'Username', border: OutlineInputBorder()),
+                labelText: 'Username',
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+              ),
             ),
           ),
           Padding(
@@ -93,7 +87,9 @@ class _SignUpFormState extends State<SignUpForm> {
               obscureText: true,
               controller: _passwordTextController,
               decoration: InputDecoration(
-                  labelText: 'Password', border: OutlineInputBorder()),
+                  labelText: 'Password',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0))),
             ),
           ),
           Padding(
@@ -102,8 +98,13 @@ class _SignUpFormState extends State<SignUpForm> {
               width: 104.0,
               height: 40,
               child: ElevatedButton(
-                style: ButtonStyle(),
-                onPressed: _formProgress == 1 ? _showWelcomeScreen : null,
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.indigo[800],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                onPressed: _formProgress == 1 ? _showHomeScreen : null,
                 child: Text('LOGIN'),
               ),
             ),
