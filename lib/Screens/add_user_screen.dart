@@ -83,10 +83,29 @@ class AddUserScreen extends StatelessWidget {
               ),
             ],
           ),
-          /////////////////////////////////////////////////////////////
           Row(
             children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(34, 8, 0, 8),
+                child: Text(
+                  'User Details',
+                  style: TextStyle(
+                      //color: Colors.indigo.shade800,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+          ////////////////////////////////////////////////////////////
+          Row(
+            children: [
+              SizedBox(
+                width: 32,
+                height: 40,
+              ),
               Flexible(
+                flex: 1,
                 child: TextField(
                   decoration: InputDecoration(
                       labelText: 'First name',
@@ -94,12 +113,38 @@ class AddUserScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0))),
                 ),
               ),
+              SizedBox(
+                width: 32,
+                height: 40,
+              ),
               Flexible(
+                flex: 1,
                 child: TextField(
                   decoration: InputDecoration(
                       labelText: 'Last name',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0))),
+                ),
+              ),
+              SizedBox(
+                width: 32,
+                height: 40,
+              ),
+              Spacer(
+                flex: 2,
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(34, 40, 0, 8),
+                child: Text(
+                  'Access Validity',
+                  style: TextStyle(
+                      //color: Colors.indigo.shade800,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
                 ),
               ),
             ],
