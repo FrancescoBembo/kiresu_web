@@ -1,6 +1,29 @@
 import 'package:flutter/material.dart';
 
-class AddUserScreen extends StatelessWidget {
+class AddUserScreen extends StatefulWidget {
+  @override
+  _AddUserScreenState createState() => _AddUserScreenState();
+}
+
+class _AddUserScreenState extends State<AddUserScreen> {
+  DateTime selectedDate = DateTime.now();
+
+  _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2022),
+      initialDatePickerMode: DatePickerMode.year,
+      fieldLabelText: 'Date of Birth',
+      fieldHintText: 'MM/DD/YYYY',
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,6 +152,14 @@ class AddUserScreen extends StatelessWidget {
               SizedBox(
                 width: 32,
                 height: 40,
+              ),
+              SizedBox(
+                height: 48,
+                child: OutlinedButton.icon(
+                  label: Text("${selectedDate.toLocal()}".split(' ')[0]),
+                  icon: Icon(Icons.calendar_today),
+                  onPressed: () => _selectDate(context),
+                ),
               ),
               Spacer(
                 flex: 2,
