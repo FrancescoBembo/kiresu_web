@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kiresu_web/services/auth.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -41,6 +42,13 @@ class _SignUpFormState extends State<SignUpForm> {
 
   double _formProgress = 0;
 
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
+  String email = '';
+  String password = '';
+  String error = '';
+
   void _updateFormProgress() {
     var progress = 0.0;
     var controllers = [
@@ -66,6 +74,7 @@ class _SignUpFormState extends State<SignUpForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -98,15 +107,15 @@ class _SignUpFormState extends State<SignUpForm> {
               width: 104.0,
               height: 40,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.indigo[800],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.indigo[800],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                   ),
-                ),
-                onPressed: _formProgress == 1 ? _showHomeScreen : null,
-                child: Text('LOGIN'),
-              ),
+                  child: Text('LOGIN'),
+                  //_formProgress == 1 ? _showHomeScreen : null,
+                  onPressed: () async {}),
             ),
           ),
         ],
