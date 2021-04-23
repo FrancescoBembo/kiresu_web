@@ -7,11 +7,11 @@ import 'package:kiresu_web/wrapper.dart';
 
 import 'Screens/home_screen.dart';
 // Import the firebase_core plugin
-//import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 //import 'package:firebase_analytics/firebase_analytics.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Future<void> main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +19,9 @@ import 'Screens/home_screen.dart';
 //   runApp(KiresuManagerApp());
 // }
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(KiresuManagerApp());
 }
 

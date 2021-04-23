@@ -1,8 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+class HomeArguments {
+  final User user;
+
+  HomeArguments(this.user);
+}
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final HomeArguments args =
+        ModalRoute.of(context)!.settings.arguments as HomeArguments;
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -54,8 +63,8 @@ class HomeScreen extends StatelessWidget {
                   label: Text('LOGOUT'),
                   icon: Icon(Icons.logout),
                   onPressed: () {
+                    FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushNamed('/');
-                    print('Pressed');
                   },
                 ),
               ),

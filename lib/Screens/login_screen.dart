@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginScreen extends StatelessWidget {
+import 'home_screen.dart';
+import 'home_screen.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,12 +32,11 @@ class LoginScreen extends StatelessWidget {
             child: SizedBox(
               width: 400,
               child: Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: SignUpForm(),
-              ),
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: SignUpForm()),
             ),
           ),
         ],
@@ -36,6 +51,7 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
@@ -59,13 +75,14 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-  void _showHomeScreen() {
-    Navigator.of(context).pushNamed('/home');
+  void _showHomeScreen(User user) {
+    Navigator.of(context).pushNamed('/home', arguments: HomeArguments(user));
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       onChanged: _updateFormProgress,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -79,6 +96,10 @@ class _SignUpFormState extends State<SignUpForm> {
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0)),
               ),
+              validator: (String? value) {
+                if (value!.isEmpty) return 'Please enter some text';
+                return null;
+              },
             ),
           ),
           Padding(
@@ -90,6 +111,10 @@ class _SignUpFormState extends State<SignUpForm> {
                   labelText: 'Password',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0))),
+              validator: (String? value) {
+                if (value!.isEmpty) return 'Please enter some text';
+                return null;
+              },
             ),
           ),
           Padding(
@@ -104,7 +129,12 @@ class _SignUpFormState extends State<SignUpForm> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                onPressed: _formProgress == 1 ? _showHomeScreen : null,
+                onPressed: () async {
+                  // _formProgress == 1 ? _showHomeScreen : null
+                  if (_formKey.currentState!.validate()) {
+                    await _signInWithEmailAndPassword();
+                  }
+                },
                 child: Text('LOGIN'),
               ),
             ),
@@ -112,5 +142,18 @@ class _SignUpFormState extends State<SignUpForm> {
         ],
       ),
     );
+  }
+
+  Future<void> _signInWithEmailAndPassword() async {
+    try {
+      final User? user = (await _auth.signInWithEmailAndPassword(
+        email: _usernameTextController.text,
+        password: _passwordTextController.text,
+      ))
+          .user;
+      _showHomeScreen(user!);
+    } catch (e) {
+      print('Incorrect Credentials.');
+    }
   }
 }
