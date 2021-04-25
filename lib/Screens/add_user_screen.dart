@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:html';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
 
 //InputElement uploadInput;
 
@@ -55,6 +56,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //var emoji;
     return Scaffold(
       appBar: AppBar(
         title: Text('User manager'),
@@ -269,6 +271,55 @@ class _AddUserScreenState extends State<AddUserScreen> {
               ),
             ],
           ),
+          /////////////////////     Generate Gesture (EMOJI)     ////////////////////////
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(34, 40, 0, 8),
+                child: Text(
+                  'Generate gersture',
+                  style: TextStyle(
+                      //color: Colors.indigo.shade800,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(32, 8, 16, 32),
+                  child: SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: Card(
+                          elevation: 2,
+                          child: InkWell(
+                            splashColor: Colors.indigo.shade600.withAlpha(40),
+                            onTap: () {
+                              print('New Gesture');
+                              String emoji = generateEmoji();
+                              //emojiToGesture(emoji);
+                            },
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                                  child: Text(
+                                    'new emoji',
+                                    style: TextStyle(
+                                        //color: Colors.indigo.shade800,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ))))
+            ],
+          )
         ],
       ),
     );
@@ -288,6 +339,42 @@ void uploadImage() {
       print("done");
     });
   });
+}
+
+String generateEmoji() {
+  Random random = new Random();
+  int randomNumber = random.nextInt(3);
+  //print(randomNumber);
+
+  String emoji = "";
+
+  if (randomNumber == 0) {
+    emoji = "👆";
+  } else if (randomNumber == 1) {
+    emoji = "✊";
+  } else if (randomNumber == 2) {
+    emoji = "👌";
+  } else if (randomNumber == 3) {
+    emoji = "✌️";
+  }
+  print(emoji);
+  return emoji;
+}
+
+String emojiToGesture(String emoji) {
+  String gestureName = "";
+
+  if (emoji == "👆") {
+    gestureName = "loser";
+  } else if (emoji == "✊") {
+    gestureName = "fist";
+  } else if (emoji == "👌") {
+    gestureName = "okay";
+  } else if (emoji == "✌️") {
+    gestureName = "peace";
+  }
+  print(gestureName);
+  return gestureName;
 }
 
 // void uploadToStorage(CurrentUser user) {
