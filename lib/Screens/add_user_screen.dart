@@ -22,6 +22,53 @@ class _AddUserScreenState extends State<AddUserScreen> {
     });
   }
 
+  void uploadImage() {
+    FileUploadInputElement uploadInput = new FileUploadInputElement()
+      ..accept = 'image/*';
+    uploadInput.click();
+
+    uploadInput.onChange.listen((event) {
+      final file = uploadInput.files!.first;
+      final reader = FileReader();
+      reader.readAsDataUrl(file);
+      reader.onLoadEnd.listen((event) {
+        print("done");
+      });
+    });
+  }
+
+  generateEmoji() {
+    setState(() {
+      if (emoji == "👆") {
+        emoji = "✊";
+      } else if (emoji == "✊") {
+        emoji = "👌";
+      } else if (emoji == "✌️") {
+        emoji = "👆";
+      } else {
+        emoji = "✌️";
+      }
+    });
+
+    print(emoji);
+  }
+
+  String emojiToGesture(String emoji) {
+    String gestureName = "";
+
+    if (emoji == "👆") {
+      gestureName = "loser";
+    } else if (emoji == "✊") {
+      gestureName = "fist";
+    } else if (emoji == "👌") {
+      gestureName = "okay";
+    } else if (emoji == "✌️") {
+      gestureName = "peace";
+    }
+    print(gestureName);
+    return gestureName;
+  }
+
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -53,6 +100,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
         selectedDate = picked;
       });
   }
+
+  String emoji = "👆";
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +348,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                             splashColor: Colors.indigo.shade600.withAlpha(40),
                             onTap: () {
                               print('New Gesture');
-                              String emoji = generateEmoji();
+                              generateEmoji();
                               //emojiToGesture(emoji);
                             },
                             child: Column(
@@ -308,7 +357,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                   padding:
                                       const EdgeInsets.fromLTRB(8, 8, 8, 0),
                                   child: Text(
-                                    'new emoji',
+                                    emoji,
                                     style: TextStyle(
                                         //color: Colors.indigo.shade800,
                                         fontWeight: FontWeight.bold,
@@ -324,57 +373,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
       ),
     );
   }
-}
-
-void uploadImage() {
-  FileUploadInputElement uploadInput = new FileUploadInputElement()
-    ..accept = 'image/*';
-  uploadInput.click();
-
-  uploadInput.onChange.listen((event) {
-    final file = uploadInput.files!.first;
-    final reader = FileReader();
-    reader.readAsDataUrl(file);
-    reader.onLoadEnd.listen((event) {
-      print("done");
-    });
-  });
-}
-
-String generateEmoji() {
-  Random random = new Random();
-  int randomNumber = random.nextInt(3);
-  //print(randomNumber);
-
-  String emoji = "";
-
-  if (randomNumber == 0) {
-    emoji = "👆";
-  } else if (randomNumber == 1) {
-    emoji = "✊";
-  } else if (randomNumber == 2) {
-    emoji = "👌";
-  } else if (randomNumber == 3) {
-    emoji = "✌️";
-  }
-  print(emoji);
-  return emoji;
-}
-
-String emojiToGesture(String emoji) {
-  String gestureName = "";
-
-  if (emoji == "👆") {
-    gestureName = "loser";
-  } else if (emoji == "✊") {
-    gestureName = "fist";
-  } else if (emoji == "👌") {
-    gestureName = "okay";
-  } else if (emoji == "✌️") {
-    gestureName = "peace";
-  }
-  print(gestureName);
-  return gestureName;
 }
 
 // void uploadToStorage(CurrentUser user) {
