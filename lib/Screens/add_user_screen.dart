@@ -1,9 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:html';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math';
+
+import 'package:kiresu_web/models/user.dart';
+import 'package:kiresu_web/services/user.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 //InputElement uploadInput;
 
@@ -14,27 +16,44 @@ class AddUserScreen extends StatefulWidget {
 
 class _AddUserScreenState extends State<AddUserScreen> {
   DateTime selectedDate = DateTime.now();
+  User user = new User(
+      uid: '',
+      fName: '',
+      lName: '',
+      gesture: '👆',
+      dOB: DateTime.now().toLocal().toString(),
+      keepData: false,
+      photoID_url: '',
+      photo_url: '',
+      validityFrom: DateTime.now().toLocal().toString(),
+      validityTo: DateTime.now().add(Duration(days: 10)).toLocal().toString());
 
-  bool save = false;
   onSwitchSaveDetails(bool doSave) {
     setState(() {
-      save = doSave;
+      user.keepData = doSave;
     });
   }
 
-  void uploadImage() {
-    FileUploadInputElement uploadInput = new FileUploadInputElement()
-      ..accept = 'image/*';
-    uploadInput.click();
+  Future<Uint8List?> uploadImage() async {
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.image, allowedExtensions: ['png']);
 
-    uploadInput.onChange.listen((event) {
-      final file = uploadInput.files!.first;
-      final reader = FileReader();
-      reader.readAsDataUrl(file);
-      reader.onLoadEnd.listen((event) {
-        print("done");
-      });
-    });
+    if (result?.files.first != null) {
+      var fileBytes = result?.files.first.bytes;
+      return fileBytes;
+    }
+  }
+
+  Future<String> uploadFile(Uint8List fileBytes) async {
+    var response = '';
+    var metadata = firebase_storage.SettableMetadata(contentType: "image/png");
+    var upload = await firebase_storage.FirebaseStorage.instance
+        .ref('${user.fName + user.lName}.png')
+        .putData(fileBytes, metadata);
+
+    response = await upload.ref.getDownloadURL();
+
+    return response;
   }
 
   generateEmoji() {
@@ -69,7 +88,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     return gestureName;
   }
 
-  _selectDate(BuildContext context) async {
+  Future<String> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -83,6 +102,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
       setState(() {
         selectedDate = picked;
       });
+    return selectedDate.toString();
   }
 
   _validityDate(BuildContext context) async {
@@ -99,9 +119,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
       setState(() {
         selectedDate = picked;
       });
+    return selectedDate.toString();
   }
 
   String emoji = "👆";
+  String date1 = DateTime.now().toLocal().toString();
+  String date2 = DateTime.now().add(Duration(days: 10)).toLocal().toString();
+  String dob = DateTime.now().toLocal().toString();
+  Uint8List? photo;
+  Uint8List? photoID;
+  String saveText = 'Add user';
 
   @override
   Widget build(BuildContext context) {
@@ -123,9 +150,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     elevation: 2,
                     child: InkWell(
                       splashColor: Colors.indigo.shade600.withAlpha(40),
-                      onTap: () {
-                        uploadImage();
-                        print('Upload photo');
+                      onTap: () async {
+                        photo = await uploadImage();
                       },
                       child: Column(
                         children: [
@@ -134,8 +160,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                               child: Icon(Icons
                                   .camera_alt_outlined) //Image.asset('assets/ic_buildings.png'),
                               ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                          Center(
                             child: Text(
                               'Add Photo',
                               style: TextStyle(
@@ -159,9 +184,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     elevation: 2,
                     child: InkWell(
                       splashColor: Colors.indigo.shade600.withAlpha(40),
-                      onTap: () {
-                        uploadImage();
-                        print('Upload ID photo');
+                      onTap: () async {
+                        photoID = await uploadImage();
                       },
                       child: Column(
                         children: [
@@ -170,8 +194,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                               child: Icon(Icons
                                   .assignment_ind_outlined) //Image.asset('assets/ic_buildings.png'),
                               ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                          Center(
                             child: Text(
                               'Add ID Photo',
                               style: TextStyle(
@@ -212,6 +235,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
               Flexible(
                 flex: 1,
                 child: TextField(
+                  onChanged: (val) {
+                    setState(() => user.fName = val);
+                  },
                   decoration: InputDecoration(
                       labelText: 'First name',
                       border: OutlineInputBorder(
@@ -225,6 +251,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
               Flexible(
                 flex: 1,
                 child: TextField(
+                  onChanged: (val) {
+                    setState(() => user.lName = val);
+                  },
                   decoration: InputDecoration(
                       labelText: 'Last name',
                       border: OutlineInputBorder(
@@ -238,10 +267,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
               SizedBox(
                 height: 48,
                 child: OutlinedButton.icon(
-                  label: Text("Date of birth: " +
-                      "${selectedDate.toLocal()}".split(' ')[0]),
+                  label: Text("Date of birth: " + "$dob".split(' ')[0]),
                   icon: Icon(Icons.calendar_today),
-                  onPressed: () => _selectDate(context),
+                  onPressed: () async {
+                    String date = await _selectDate(context);
+                    selectedDate = DateTime.now();
+                    user.dOB = date;
+                    setState(() {
+                      dob = date;
+                    });
+                  },
                 ),
               ),
               Spacer(
@@ -273,10 +308,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
               SizedBox(
                 height: 48,
                 child: OutlinedButton.icon(
-                  label: Text(
-                      "From: " + "${selectedDate.toLocal()}".split(' ')[0]),
+                  label: Text("From: " + "$date1".split(' ')[0]),
                   icon: Icon(Icons.calendar_today),
-                  onPressed: () => _validityDate(context),
+                  onPressed: () async {
+                    String date = await _validityDate(context);
+                    selectedDate = DateTime.now();
+                    user.validityFrom = date;
+                    setState(() {
+                      date1 = date;
+                    });
+                  },
                 ),
               ),
               SizedBox(
@@ -286,10 +327,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
               SizedBox(
                 height: 48,
                 child: OutlinedButton.icon(
-                  label:
-                      Text("To: " + "${selectedDate.toLocal()}".split(' ')[0]),
+                  label: Text("To: " + "$date2".split(' ')[0]),
                   icon: Icon(Icons.calendar_today),
-                  onPressed: () => _validityDate(context),
+                  onPressed: () async {
+                    String date = await _validityDate(context);
+                    selectedDate = DateTime.now();
+                    user.validityTo = date;
+                    setState(() {
+                      date2 = date;
+                    });
+                  },
                 ),
               ),
               SizedBox(
@@ -297,13 +344,13 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 height: 40,
               ),
               Switch(
-                  value: save,
+                  value: user.keepData,
                   activeTrackColor: Colors.indigo[300],
                   activeColor: Colors.indigo[800],
                   onChanged: (doSave) {
                     onSwitchSaveDetails(doSave);
                     print("save details: ");
-                    print(save);
+                    print(user.keepData);
                   }),
               SizedBox(
                 width: 160,
@@ -349,6 +396,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                             onTap: () {
                               print('New Gesture');
                               generateEmoji();
+                              user.gesture = emoji;
                               //emojiToGesture(emoji);
                             },
                             child: Column(
@@ -367,6 +415,54 @@ class _AddUserScreenState extends State<AddUserScreen> {
                               ],
                             ),
                           ))))
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(32, 8, 16, 32),
+                child: RawMaterialButton(
+                  fillColor: Colors.blue[900],
+                  textStyle: TextStyle(color: Colors.white),
+                  onPressed: () async {
+                    setState(() {
+                      saveText = 'Loading';
+                    });
+                    setState(() {
+                      saveText = 'Uploading Pictures';
+                    });
+                    user.photo_url = await uploadFile(photo!);
+                    user.photoID_url = await uploadFile(photoID!);
+                    if (user.photo_url == '') {
+                      setState(() {
+                        saveText = 'Failed - Upload Picture';
+                      });
+                    } else {
+                      print('UID: ' + user.uid);
+                      print('fname: ' + user.fName);
+                      print('lname: ' + user.lName);
+                      print('gesture: ' + user.gesture);
+                      print('photoid: ' + user.photoID_url);
+                      print('photo: ' + user.photo_url);
+                      print('from: ' + user.validityFrom);
+                      print('to: ' + user.validityTo);
+                      print('keep: ' + user.keepData.toString());
+                      print('dob: ' + user.dOB);
+                      setState(() {
+                        saveText = 'Saving data';
+                      });
+                      await UserService(uid: '').newUser(user);
+
+                      setState(() {
+                        saveText = 'User Added';
+                      });
+
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Text(saveText),
+                ),
+              ),
             ],
           )
         ],

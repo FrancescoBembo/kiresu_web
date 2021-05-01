@@ -145,7 +145,7 @@ class HomeScreen extends StatelessWidget {
                     child: InkWell(
                       splashColor: Colors.indigo.shade600.withAlpha(40),
                       onTap: () {
-                        print('Card tapped.');
+                        Navigator.of(context).pushNamed('/users');
                       },
                       child: Column(
                         children: [

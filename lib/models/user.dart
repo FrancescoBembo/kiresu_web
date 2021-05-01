@@ -1,4 +1,5 @@
 class User {
+  String uid;
   String fName;
   String lName;
   String dOB;
@@ -10,7 +11,8 @@ class User {
   bool keepData;
 
   User(
-      {required this.fName,
+      {required this.uid,
+      required this.fName,
       required this.lName,
       required this.dOB,
       required this.photo_url,

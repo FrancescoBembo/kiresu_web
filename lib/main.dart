@@ -3,7 +3,10 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:kiresu_web/Screens/add_user_screen.dart';
 import 'package:kiresu_web/Screens/login_screen.dart';
+import 'package:kiresu_web/Screens/users_screen.dart';
+import 'package:kiresu_web/services/user.dart';
 import 'package:kiresu_web/wrapper.dart';
+import 'package:provider/provider.dart';
 
 import 'Screens/home_screen.dart';
 // Import the firebase_core plugin
@@ -48,9 +51,10 @@ class KiresuManagerApp extends StatelessWidget {
       ),
       home: Wrapper(),
       routes: {
-        '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
-        '/addUser': (context) => AddUserScreen(),
+        '/login': (_) => LoginScreen(),
+        '/home': (_) => HomeScreen(),
+        '/addUser': (_) => AddUserScreen(),
+        '/users': (_) => UsersScreen(),
       },
     );
   }
