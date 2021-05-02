@@ -12,8 +12,3 @@ Firebase plugin for Flutter -> https://firebase.flutter.dev/docs/overview/
 
 
 
-
-
-
-## Getting Started
-
