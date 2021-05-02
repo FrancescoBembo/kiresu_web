@@ -70,7 +70,8 @@ class _UsersScreenState extends State<UsersScreen> {
                                         padding:
                                             const EdgeInsets.only(right: 20.0),
                                         child: RawMaterialButton(
-                                          fillColor: Colors.blue[900],
+                                          fillColor: Colors.indigo[800],
+
                                           onPressed: () {
                                             UserService(uid: users[index].uid)
                                                 .deleteUser();

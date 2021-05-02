@@ -422,7 +422,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(32, 8, 16, 32),
                 child: RawMaterialButton(
-                  fillColor: Colors.blue[900],
+                  fillColor: Colors.indigo[800],
                   textStyle: TextStyle(color: Colors.white),
                   onPressed: () async {
                     setState(() {
